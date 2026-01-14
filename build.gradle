@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'maven-publish'
+    id "org.sonarqube" version "4.4.1.3373"
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JUnit 4 (Required for your specific imports like @RunWith)
+    testImplementation 'junit:junit:4.13.2'
+
+    // Cucumber dependencies
+    testImplementation 'io.cucumber:cucumber-java:7.14.0'
+    testImplementation 'io.cucumber:cucumber-junit:7.14.0'
+}
+
+test {
+    useJUnit() // Tells Gradle to use JUnit 4
+    finalizedBy jacocoTestReport // Generate coverage report after tests
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+}
+
+// Configuration for publishing to MyMavenRepo (needed for Deploy stage)
+publishing {
+    repositories {
+        maven {
+            // Replace with your actual MyMavenRepo URL
+            url = uri("https://mymavenrepo.com/repo/cEmjfkxugPlzLxXg1A2B/")
+            credentials {
+                username = System.getenv("MYMAVENREPO_USER") ?: "myMavenRepo"
+                password = System.getenv("MYMAVENREPO_PASSWORD") ?: "test0005"
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
