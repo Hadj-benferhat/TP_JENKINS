@@ -26,6 +26,7 @@ pipeline {
             }
         }
 
+
         // 2.3 La phase Code Quality
         stage('Code Quality') {
             steps {
